@@ -703,7 +703,7 @@ Puedes encontrar más información sobre los temas [aquí](https://ggplot2.tidyv
 
 Nos permiten visualizar subconjuntos de los datos.
 
-```{r}
+```{r, fig.height=5}
 ggplot(penguins, aes(bill_length_mm, bill_depth_mm)) +
   geom_point() +
   facet_wrap(.~species)
@@ -711,11 +711,9 @@ ggplot(penguins, aes(bill_length_mm, bill_depth_mm)) +
 
 ---
 
----
+# Facets: cambiando el layout
 
-# Facets: change the layout
-
-```{r, fig.height=4}
+```{r, fig.height=5}
 ggplot(penguins, aes(bill_length_mm, bill_depth_mm)) +
   geom_point() +
   facet_wrap(.~species, nrow = 3)
@@ -723,12 +721,9 @@ ggplot(penguins, aes(bill_length_mm, bill_depth_mm)) +
 
 ---
 
+# Facets: liberando las escalas
 
----
-
-# Facets: free scales
-
-```{r}
+```{r, fig.height=5}
 ggplot(penguins, aes(bill_length_mm, bill_depth_mm)) +
   geom_point() + 
   facet_wrap(~species, scales = "free")
@@ -736,13 +731,18 @@ ggplot(penguins, aes(bill_length_mm, bill_depth_mm)) +
 
 ---
 
-# Facets for two variables
+# Facets para dos variables 
 
 ```{r, fig.height=4}
 ggplot(penguins, aes(bill_length_mm, bill_depth_mm)) +
   geom_point() + 
   facet_grid(island~species, scales = "free") #<<
 ```
+
+---
+class: middle, center
+
+# Diagramas de barras
 
 ---
 
@@ -812,7 +812,7 @@ ggplot(penguins, aes(sex)) +
 
 ## Ajustar el texto para que no se solape con la línea
 
-```{r, fig.height=5}
+```{r, fig.height=4}
 ggplot(penguins, aes(sex)) +
   geom_bar(fill = "lightblue", color = "black") +
   scale_x_discrete(limits = c("male", "female")) +
@@ -824,7 +824,7 @@ ggplot(penguins, aes(sex)) +
 
 ## Ajuste fuera de la barra
 
-```{r}
+```{r, fig.height=4}
 ggplot(penguins, aes(sex)) +
   geom_bar(fill = "lightblue", color = "black", alpha = 0.5) +
   scale_x_discrete(limits = c("male", "female")) +
@@ -842,7 +842,7 @@ ggplot(penguins, aes(sex)) +
 ## Añadiendo coloreado
 
 
-```{r}
+```{r, fig.height=4}
 ggplot(penguins, aes(sex)) +
   geom_bar(aes(fill = species), color = "black", alpha = 0.5) +
   scale_x_discrete(limits = c("male", "female")) +
@@ -858,7 +858,7 @@ ggplot(penguins, aes(sex)) +
 
 ## Mover posición de la leyenda
 
-```{r, fig.height=5}
+```{r, fig.height=4}
 ggplot(penguins, aes(sex)) +
   geom_bar(aes(fill = species), color = "black", alpha = 0.5) +
   scale_x_discrete(limits = c("male", "female")) +
@@ -876,7 +876,7 @@ ggplot(penguins, aes(sex)) +
 
 # Una barra para cada categoría
 
-```{r, fig.height=5}
+```{r, fig.height=3}
 ggplot(penguins, aes(sex)) +
   geom_bar(aes(fill = species), color = "black", alpha = 0.5,
            position = "dodge") +
@@ -896,7 +896,7 @@ ggplot(penguins, aes(sex)) +
 
 ## Utilizando `geom_bar` para ver la distribución
 
-```{r, fig.height = 5}
+```{r, fig.height = 3}
 ggplot(penguins, aes(island, fill = sex)) +
   geom_bar(position = "fill") +
   scale_fill_brewer(palette = "Paired", na.value = "black") +
@@ -933,12 +933,16 @@ class: middle, center
 
 ---
 
+## Instalar y cargar paquete con nuevos datos
+
 ```
 install.packages(babynames)
 library(babynames)
 ```
 
-```{r, fig.height=4}
+---
+
+```{r, fig.height=3}
 don <- babynames %>% 
   filter(name %in% c("Ashley", "Patricia", "Helen")) %>%
   filter(sex=="F")
@@ -952,7 +956,7 @@ ggplot(don, aes(year, n, group = name, color = name)) +
 
 ---
 
-```{r, fig.height=5}
+```{r, fig.height=4}
 p2 <- ggplot(gapminder, aes(gdpPercap, lifeExp,
                       size = pop,
                       color = continent)) +
@@ -973,7 +977,7 @@ class: middle, center
 
 # Diagrama básico para contar cuantos pingüinos hay de cada sexo
 
-```{r, fig.height=5}
+```{r, fig.height=3}
 pl1 <- ggplot(penguins, aes(sex)) +
   geom_bar()
 ggplotly(pl1)
@@ -983,7 +987,7 @@ ggplotly(pl1)
 
 # Diagrama básico para contar cuantos pingüinos hay de cada sexo
 
-```{r, fig.height=5}
+```{r, fig.height=3}
 pl1 <- ggplot(penguins, aes(sex)) +
   geom_bar()
 ggplotly(pl1)
@@ -991,7 +995,7 @@ ggplotly(pl1)
 
 ---
 
-```{r, fig.height=5}
+```{r, fig.height=3}
 pl2 <- ggplot(penguins, aes(x = bill_length_mm, 
                             y = bill_depth_mm)) +
   geom_point(aes(fill = island, 
@@ -1008,13 +1012,11 @@ pl2 <- ggplot(penguins, aes(x = bill_length_mm,
   guides(fill = guide_legend(override.aes = list(color = c(Biscoe="red", 
                                                            Dream="blue", 
                                                            Torgersen="green"))))
-
-pl2
 ```
 
 ---
 
-```{r}
+```{r, fig.height=5}
 pl2
 ```
 
@@ -1047,7 +1049,6 @@ Para superar el curso, es necesaria la entrega de la siguiente tarea:
 
 **DEADLINE**: 31 de Mayo 2021, 23:59.
 
----
 
 
 
