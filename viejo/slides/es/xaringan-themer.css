@@ -18,20 +18,20 @@
  *  Version: 0.3.0
  *
  * ------------------------------------------------------- */
-@import url(https://fonts.googleapis.com/css?family=Roboto+Slab:300,300i&display=swap);
-@import url(https://fonts.googleapis.com/css?family=Itim&display=swap);
-@import url(https://fonts.googleapis.com/css?family=Source+Code+Pro&display=swap);
+@import url(https://fonts.googleapis.com/css?family=Montserrat:300,300i&display=swap);
+@import url(https://fonts.googleapis.com/css?family=Josefin+Sans&display=swap);
+@import url(https://fonts.googleapis.com/css?family=Fira+Mono&display=swap);
 
 
 :root {
   /* Fonts */
-  --text-font-family: 'Roboto Slab';
+  --text-font-family: Montserrat;
   --text-font-is-google: 1;
   --text-font-family-fallback: -apple-system, BlinkMacSystemFont, avenir next, avenir, helvetica neue, helvetica, Ubuntu, roboto, noto, segoe ui, arial;
   --text-font-base: sans-serif;
-  --header-font-family: Itim;
+  --header-font-family: 'Josefin Sans';
   --header-font-is-google: 1;
-  --code-font-family: 'Source Code Pro';
+  --code-font-family: 'Fira Mono';
   --code-font-is-google: 1;
   --base-font-size: 20px;
   --text-font-size: 1rem;
