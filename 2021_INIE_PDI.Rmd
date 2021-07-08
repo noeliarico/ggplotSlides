@@ -273,11 +273,13 @@ ggplot(data = diamonds, aes(x = cut)) +
   stat_count()
 ```
 
+
 ```
 ggplot(data = diamonds, 
         aes(x = cut)) +
   stat_count() 
 ```
+
 
 ]
 
@@ -287,11 +289,13 @@ ggplot(data = diamonds, aes(x = clarity)) +
   stat_count()
 ```
 
+
 ```
 ggplot(data = diamonds, 
         aes(x = clarity)) +
   stat_count()
 ```
+
 ]
 
 
