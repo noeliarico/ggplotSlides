@@ -1,5 +1,5 @@
 ---
-title: "Visualización de datos para la transferencia \\ de resultados en distintos ámbitos científicos"
+title: "Visualización de datos para la transferencia \\de resultados en distintos ámbitos científicos"
 subtitle: "INIE - Formación PDI, UniOvi"  
 author: "Noelia Rico - Departamento de Informática"
 date: '5-6 JULIO 2021'
@@ -252,8 +252,11 @@ Datos sobre los precios y otros atributos de de 53940 diamantes.
 #  Diamantes 💎
 
 ```{r echo=FALSE, tidy=FALSE}
-rmarkdown::paged_table(diamonds)
+rmarkdown::paged_table(head(diamonds, 500))
 ```
+
+
+
 
 ---
 
