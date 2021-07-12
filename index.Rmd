@@ -1,8 +1,7 @@
 ---
 title: "Visualización de datos para la transferencia \\ de resultados en distintos ámbitos científicos"
-subtitle: "INIE - Formación PDI \n UniOvi"  
-author: 
-  - "Noelia Rico \n Departamento de Informática"
+subtitle: "INIE - Formación PDI, UniOvi"  
+author: "Noelia Rico - Departamento de Informática"
 date: '5-6 JULIO 2021'
 output:
   xaringan::moon_reader:
@@ -28,15 +27,26 @@ knitr::opts_chunk$set(fig.retina = 3, fig.align = 'center', warning = FALSE, mes
 ```
 
 ```{r xaringan-themer, include=FALSE, warning=FALSE}
+# Colores uniovi
+verde <- "#018082"
+amarillo_oscuro <- "#EAAE30"
+amarillo_claro <- "#F4D598"
+azul <- "#53A0D5"
 
 library(xaringanthemer)
 style_mono_accent(
-  base_color = "#1c5253",
+  # Colors ---
+  base_color = verde,
+ # link_color = azul,
+  code_inline_background_color = "#F8F8F8",
+  inverse_background_color = amarillo_claro,
+  base_font_size = "18px",
+  # Fonts ---
   # header_font_google = google_font("Josefin Sans"),
-  header_font_google = google_font("Itim"),
+  header_font_google = google_font("Rubik"),
   text_font_google   = google_font("Roboto Slab", "300", "300i"),
-  # code_font_google   = google_font("Fira Mono")
-  code_font_google   = google_font("Source Code Pro")
+  code_font_google   = google_font("Fira Mono")
+  #code_font_google   = google_font("Source Code Pro")
 )
 ```
 
@@ -54,12 +64,14 @@ style_mono_accent(
   1. `patchwork`
   1. `plotly`
   1. `gganimate`
+  1. `wordcloud`
+  1. `waffle`
 
 ---
 
 # Grammar of graphics
 
-- Aproximación teórica sobre como construir gráficos [1]
+- Aproximación teórica sobre como construir gráficos.
 - Muchos programas: ggplot, tableau, vega-lite
 - No se centra en
   - el tipo de gráfico que es mejor en función del tipo de datos
@@ -67,7 +79,7 @@ style_mono_accent(
   - el algoritmo necesario para definir el gráfico
 - Sí se centra en el mecanismo. ¿Cómo diseñar el sistema que nos permite construir el gráfico?
 
-.footnote[[1] [https://www.springer.com/gp/book/9780387245447](https://www.springer.com/gp/book/9780387245447)]
+.footnote[Grammar of graphics: [https://www.springer.com/gp/book/9780387245447](https://www.springer.com/gp/book/9780387245447)]
 
 ---
 
@@ -163,7 +175,7 @@ rmarkdown::paged_table(penguins)
 - Gráfico de barras para contar el número de pingüinos estudiados en cada isla
 
 .pull-left[
-```{r echo=FALSE, fig.height=4}
+```{r echo=FALSE, fig.height=3}
 ggplot(data = penguins, aes(x = island)) + stat_count()
 ```
 
@@ -178,7 +190,7 @@ ggplot(data = penguins,
 --
 
 .pull-right[
-```{r echo=FALSE, fig.height=4}
+```{r echo=FALSE, fig.height=3}
 ggplot(data = penguins, 
        aes(x = island)) + 
   geom_bar()
@@ -197,7 +209,7 @@ ggplot(data = penguins,
 # Visualizaciones para una sola variable numérica: Histograma
 
 
-```{r echo=FALSE, fig.height=4}
+```{r echo=FALSE, fig.height=3}
 ggplot(penguins, aes(bill_length_mm)) +
   geom_histogram()
 ```
@@ -248,7 +260,7 @@ rmarkdown::paged_table(diamonds)
 # Ejercicios
 
 .pull-left[
-```{r echo=FALSE, fig.height=4}
+```{r echo=FALSE, fig.height=3}
 ggplot(data = diamonds, 
        aes(x = cut)) +
   stat_count()
@@ -256,7 +268,7 @@ ggplot(data = diamonds,
 ]
 
 .pull-right[
-```{r echo=FALSE, fig.height=4}
+```{r echo=FALSE, fig.height=3}
 ggplot(data = diamonds, 
        aes(x = clarity)) + 
   stat_count()
@@ -268,7 +280,7 @@ ggplot(data = diamonds,
 # Soluciones
 
 .pull-left[
-```{r echo=FALSE, fig.height=4}
+```{r echo=FALSE, fig.height=3}
 ggplot(data = diamonds, aes(x = cut)) +
   stat_count()
 ```
@@ -284,7 +296,7 @@ ggplot(data = diamonds,
 ]
 
 .pull-right[
-```{r echo=FALSE, fig.height=4}
+```{r echo=FALSE, fig.height=3}
 ggplot(data = diamonds, aes(x = clarity)) +
   stat_count()
 ```
@@ -319,7 +331,7 @@ y además modificaciones de la estética
 
 # Gráfico de dispersión
 
-```{r echo=FALSE, fig.height=4}
+```{r echo=FALSE, fig.height=3}
 ggplot(data = penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
   geom_point()
 ```
@@ -344,7 +356,7 @@ ggplot(penguins, aes(bill_length_mm, bill_depth_mm)) + #<<
 
 ## Color 🎨
 
-```{r echo=FALSE, fig.height=4}
+```{r echo=FALSE, fig.height=3}
 ggplot(penguins, aes(bill_length_mm, bill_depth_mm)) +
   geom_point(color = "blue")
 ```
@@ -364,7 +376,7 @@ Colores por defecto disponibles: http://sape.inf.usi.ch/quick-reference/ggplot2/
 
 ## Color personalizado 🧑‍🎨
 
-```{r echo=FALSE, fig.height=4}
+```{r echo=FALSE, fig.height=3}
 ggplot(penguins, aes(bill_length_mm, bill_depth_mm)) +
   geom_point(color = "#fabada")
 ```
@@ -382,7 +394,7 @@ Para encontrar más colores: [https://coolors.com](https://coolors.com)
 
 ## Solapando `geom`s
 
-```{r echo=FALSE, fig.height=4}
+```{r echo=FALSE, fig.height=3}
 ggplot(penguins, aes(bill_length_mm, bill_depth_mm)) +
   geom_point(color = "#fabada") +
   geom_hline(yintercept = 15.2) 
@@ -400,7 +412,7 @@ ggplot(penguins, aes(bill_length_mm, bill_depth_mm)) +
 
 ## Solapando `geom`s
 
-```{r echo=FALSE, fig.height=4}
+```{r echo=FALSE, fig.height=3}
 ggplot(penguins, aes(bill_length_mm, bill_depth_mm)) +
   geom_point(color = "#fabada") +
   geom_hline(yintercept = 15.2) +
@@ -420,7 +432,7 @@ ggplot(penguins, aes(bill_length_mm, bill_depth_mm)) +
 
 ## Solapando `geom`s
 
-```{r echo=FALSE, fig.height=4}
+```{r echo=FALSE, fig.height=3}
 ggplot(penguins, aes(bill_length_mm, bill_depth_mm)) +
   geom_point(color = "#fabada") +
   geom_hline(yintercept = 15.2, color = "red", linetype = "dotted") +  
@@ -442,7 +454,7 @@ Puedes encontrar un resumen de todos los tipos de línea [aquí](http://www.sthd
 
 ## Rectas genéricas
 
-```{r echo=FALSE, fig.height=4}
+```{r echo=FALSE, fig.height=3}
 ggplot(penguins, aes(bill_length_mm, bill_depth_mm)) +
   geom_point(color = "#fabada") +
   geom_abline(slope = .3, intercept = 2)
@@ -460,7 +472,7 @@ ggplot(penguins, aes(bill_length_mm, bill_depth_mm)) +
 
 ## Cuidado con el tamaño ☝🏻
 
-```{r echo=FALSE, fig.height=4}
+```{r echo=FALSE, fig.height=3}
 ggplot(penguins, aes(bill_length_mm, bill_depth_mm)) +
   geom_point(color = "#fabada") +
   geom_abline(slope = .3, intercept = 2, size = 2) 
@@ -478,7 +490,7 @@ ggplot(penguins, aes(bill_length_mm, bill_depth_mm)) +
 
 ## El orden de las capas también importa
 
-```{r echo=FALSE, fig.height=4}
+```{r echo=FALSE, fig.height=3}
 ggplot(penguins, aes(bill_length_mm, bill_depth_mm)) +
   geom_abline(slope = .3, intercept = 2, size = 2) + #<<
   geom_point(color = "#fabada") #<<
@@ -496,7 +508,7 @@ ggplot(penguins, aes(bill_length_mm, bill_depth_mm)) +
 
 ## Mapeando variables como `color`
 
-```{r echo=FALSE, fig.height=4}
+```{r echo=FALSE, fig.height=3}
 ggplot(penguins, aes(bill_length_mm, bill_depth_mm, color = sex)) + #<<
   geom_point()
 ```
@@ -540,7 +552,7 @@ ggplot(penguins, aes(bill_length_mm, bill_depth_mm, color = sex)) +
 
 # Paletas predeterminadas 🎨
 
-```{r, echo=FALSE, fig.height=4}
+```{r, echo=FALSE, fig.height=3}
 knitr::include_graphics("./imgs/paletas.png")
 ```
 
@@ -548,7 +560,7 @@ knitr::include_graphics("./imgs/paletas.png")
 
 # Paletas predeterminadas 🎨
 
-```{r echo=FALSE, fig.height=4}
+```{r echo=FALSE, fig.height=3}
 ggplot(penguins, aes(bill_length_mm, bill_depth_mm, color = sex)) +
   geom_point() + 
   scale_color_brewer(palette="Dark2")
@@ -579,7 +591,7 @@ names(wes_palettes)
 
 # También hay otros paquetes 🧑‍🎨
 
-```{r echo=FALSE, fig.height=4}
+```{r echo=FALSE, fig.height=3}
 ggplot(penguins, aes(bill_length_mm, bill_depth_mm, color = sex)) +
   geom_point() + 
   scale_color_manual(values=wes_palette(n=3, name="GrandBudapest1")) 
@@ -615,7 +627,7 @@ ggplot(penguins, aes(bill_length_mm, bill_depth_mm,
 
 ## Más aesthetics: `shape`
 
-```{r echo=FALSE, fig.height=4}
+```{r echo=FALSE, fig.height=3}
 ggpubr::show_point_shapes()
 ```
 
@@ -628,7 +640,7 @@ Por defecto, la shape utilizada es la número 16.
 
 ## Más aesthetics: `shape`
 
-```{r echo=FALSE, fig.height=4}
+```{r echo=FALSE, fig.height=3}
 ggplot(penguins, aes(bill_length_mm, bill_depth_mm)) +
   geom_point(shape = 17) 
 ```
@@ -644,7 +656,7 @@ ggplot(penguins, aes(bill_length_mm, bill_depth_mm)) +
 
 ## De nuevo, aesthetic vs. apariencia ⚠️
 
-```{r echo=FALSE, fig.height=4}
+```{r echo=FALSE, fig.height=3}
 ggplot(penguins, aes(bill_length_mm, bill_depth_mm, 
                      shape = island)) + #<<
   geom_point()
@@ -662,7 +674,7 @@ ggplot(penguins, aes(bill_length_mm, bill_depth_mm,
 
 ## También podemos combinarlas
 
-```{r echo=FALSE, fig.height=4}
+```{r echo=FALSE, fig.height=3}
 ggplot(penguins, aes(bill_length_mm, bill_depth_mm, 
                      shape = island, color = sex)) + #<<
   geom_point()
@@ -692,7 +704,7 @@ ggplot(penguins, aes(bill_length_mm, bill_depth_mm)) +
 ## Diferencia entre color y fill
 
 .pull-left[
-```{r echo=FALSE, fig.height=4}
+```{r echo=FALSE, fig.height=3}
 ggplot(penguins, aes(bill_length_mm, bill_depth_mm, 
                      color = sex)) + #<<
   geom_point(shape = 23)
@@ -712,7 +724,7 @@ ggplot(penguins,
 ]
 
 .pull-right[
-```{r echo=FALSE, fig.height=4}
+```{r echo=FALSE, fig.height=3}
 ggplot(penguins, aes(bill_length_mm, bill_depth_mm, 
                      fill = sex)) + #<<
   geom_point(shape = 23)
@@ -745,7 +757,7 @@ Poder, se puede pero... 🥴
 
 ## Otra aesthetic: `size`
 
-```{r echo=FALSE, fig.height=4}
+```{r echo=FALSE, fig.height=3}
 ggplot(penguins, aes(bill_length_mm, bill_depth_mm, size = island)) +
   geom_point(color = "blue")
 ```
@@ -764,7 +776,7 @@ ggplot(penguins, aes(bill_length_mm, bill_depth_mm,
 
 Habitualmente cuando trabajamos con `size` los puntos se solapan
 
-```{r echo=FALSE, fig.height=4}
+```{r echo=FALSE, fig.height=3}
 ggplot(penguins, aes(bill_length_mm, bill_depth_mm, size = island)) +
   geom_point(color = "blue", alpha = .4)
 ```
@@ -780,7 +792,7 @@ ggplot(penguins, aes(bill_length_mm, bill_depth_mm, size = island)) +
 
 # La aesthetic `alpha`
 
-```{r echo=FALSE, fig.height=4}
+```{r echo=FALSE, fig.height=3}
 ggplot(penguins, aes(bill_length_mm, bill_depth_mm, 
                      size = island,
                      alpha = island)) + #<<
@@ -837,7 +849,11 @@ Ahora el objeto `p` está disponible para hacer cualquier tipo de modificación.
 
 ---
 
-```{r}
+# Modificando un objeto
+
+Podemos solapar capas sobre un objeto previamente almacenado
+
+```{r fig.height=3}
 p + labs(title="Relación bill_depth/bill_length en mm")
 ```
 
@@ -923,20 +939,13 @@ library(hrbrthemes)
 
 ---
 
-# Modificar algunos aspectos del tema
-
-```
-ggplot(penguins, aes(bill_length_mm, fill = sex)) +
-  geom_histogram(alpha = .6, color = "black") +
-  theme_ipsum()
-```
-
---- 
-
 # Valores continuos en `size`
 
-```{r fig.height=5}
-ggplot(penguins, aes(bill_length_mm, bill_depth_mm, size = year)) +
+
+```{r fig.height=4}
+ggplot(penguins, aes(bill_length_mm, 
+                     bill_depth_mm, 
+                     size = year)) +
   geom_point(color = "blue")
 ```
 
@@ -980,7 +989,7 @@ ggplot(penguins, aes(bill_length_mm, bill_depth_mm, size = as.factor(year))) +
 ]
 
 .pull-right[
-```{recho=FALSE, fig.height=5}
+```{r echo=FALSE, fig.height=5}
 ggplot(penguins, aes(bill_length_mm, bill_depth_mm, size = as.factor(year))) +
   geom_point(color = "blue") +
   labs(size = "Año")
@@ -993,7 +1002,7 @@ ggplot(penguins, aes(bill_length_mm, bill_depth_mm, size = as.factor(year))) +
 
 Hasta ahora hemos trabajado con variables continuas en ambos ejes. ¿Qué pasa si utilizamos una variable discreta con `geom_point()`? Utilizando body_mass_g para obtener lo siguiente
 
-```{r echo=FALSE, fig.height=4}
+```{r echo=FALSE, fig.height=3}
 ggplot(penguins, aes(species, body_mass_g)) +
   geom_point()
 ```
@@ -1149,13 +1158,15 @@ ggplot(penguins, aes(island, species, color = species)) +
 ```
 
 ---
-class: center
+class: center, inverse, middle
 
 # Diagramas de barras
 
 ---
 
-# Ya sabemos hacer un gráfico de barras de una sola variable
+# Con una sola variable
+
+Ya sabemos hacer un gráfico de barras de una sola variable
 
 ```{r fig.height=4}
 ggplot(penguins, aes(species)) +
@@ -1168,7 +1179,7 @@ ggplot(penguins, aes(species)) +
 
 Colorear utilizando el sexo de los pingüinos
 
-```{r echo=FALSE, fig.height=4}
+```{r echo=FALSE, fig.height=3}
 ggplot(penguins, aes(species, fill = sex)) +
   geom_bar()
 ```
@@ -1184,7 +1195,7 @@ ggplot(penguins, aes(species, fill = sex)) +
 
 Está representación no es muy útil para comparar
 
---
+---
 
 # Diagrama de barras
 
@@ -1195,6 +1206,9 @@ Un error común al utilizar `stat_count()` es el siguiente:
 ```
 stat_count() can only have an x or y aesthetic.
 ```
+
+- Aparece cuando pasamos dos variables en `(aes)`.
+- Por ejemplo, al intentar dar color si se nos olvida poner `fill = ` interpreta que queremos dar valor a la `y` y nos encontramos este error.
 
 ---
 
@@ -1218,12 +1232,17 @@ ggplot(penguins, aes(species, fill = sex)) +
 
 ---
 
-# ¿En qué isla hay más de la especie Adelie?
+# Posiciones: `dodge`
+
+¿En qué isla hay más de la especie Adelie?
+  - El gráfico de la derecha nos permite una comparación mejor
 
 .pull-left[
 ```{r fig.height=4}
-ggplot(penguins, aes(island, fill = species)) + 
-  geom_bar()
+ggplot(penguins, 
+       aes(island, 
+           fill = species)) + 
+  geom_bar() #<<
 ```
 
 ]
@@ -1231,22 +1250,36 @@ ggplot(penguins, aes(island, fill = species)) +
 .pull-right[
 
 ```{r fig.height=4}
-ggplot(penguins, aes(island, fill = species)) + 
-  geom_bar(position = "dodge")
+ggplot(penguins, 
+       aes(island, 
+           fill = species)) + 
+  geom_bar(position = "dodge") #<<
 ```
 
 ]
 
 ---
 
-# Añadiendo labels a la posición `stack`
+# Etiquetas en posición `stack`
 
 Otra opción para comparar es añadir etiquetas utilizando `geom_bar()`
 
 ```{r fig.height=4}
 ggplot(penguins, aes(species, fill = sex)) + 
   geom_bar() +
-  geom_text(stat='count', aes(label=..count..), position = position_stack(vjust=.5))
+  geom_text(stat='count', aes(label=..count..), 
+            position = position_stack(vjust=.5))
+```
+
+---
+
+# Etiquetas en posición `stack`
+
+```{r eval=FALSE}
+ggplot(penguins, aes(species, fill = sex)) + 
+  geom_bar() +
+  geom_text(stat='count', aes(label=..count..), 
+            position = position_stack(vjust=.5))
 ```
 
 El parámetro `vjust` representa el ajuste vertical:
@@ -1257,30 +1290,28 @@ El parámetro `vjust` representa el ajuste vertical:
 
 ---
 
-# Añadiendo labels a la posición `dodge`
+# Etiquetas en posición `dodge`
 
 ```{r fig.height=4}
 ggplot(penguins, aes(species, fill = sex)) + 
   geom_bar(position = "dodge") +
-  geom_text(stat='count', aes(label=..count..), vjust=-1, position = position_dodge(width = 1))
+  geom_text(stat='count', 
+            aes(label=..count..), 
+            vjust = -1, 
+            position = position_dodge(width = 1))
 ```
-
 
 ---
 
 # Datos resumidos
 
-```
-penguins_total <- penguins %>% group_by(species, sex) %>% count()
-ggplot(penguins_total, aes(x = species, y = sex)) +
-  geom_bar()
-```
+Almacenamos en `penguins_total` una variación del conjunto de datos original.
 
 ```{r fig.height=4}
-penguins_total <- penguins %>% 
-  group_by(species, sex) %>% 
-  count()
-penguins_total
+penguins_total <- penguins %>% # conjunto inicial
+  group_by(species, sex) %>% # crear grupos
+  count() # contar el num de filas en cada grupo
+penguins_total # resultado final
 ```
 
 
@@ -1291,8 +1322,9 @@ penguins_total
 Ya no podemos utilizar la stat `count`
 
 ```{r fig.height=4}
-ggplot(penguins_total, aes(x = species, y = n, fill = sex)) +
-  geom_bar(stat = "identity")
+ggplot(penguins_total, 
+       aes(x = species, y = n, fill = sex)) + #<<
+  geom_bar(stat = "identity") #<<
 ```
 
 ---
@@ -1300,8 +1332,10 @@ ggplot(penguins_total, aes(x = species, y = n, fill = sex)) +
 # Datos resumidos: position `dodge`
 
 ```{r fig.height=4}
-ggplot(penguins_total, aes(x = species, y = n, fill = sex)) +
-  geom_bar(stat = "identity", position = "dodge")
+ggplot(penguins_total, 
+       aes(x = species, y = n, fill = sex)) +
+  geom_bar(stat = "identity", 
+           position = "dodge") #<<
 ```
 
 ---
@@ -1318,7 +1352,7 @@ class: center, middle, inverse
 - Visualización del gráfico
 - Generación dinámica del código
 
-```
+```{r eval=FALSE}
 install.packages("esquisse")
 esquisse::esquisser()
 ```
@@ -1352,18 +1386,21 @@ Blog: https://www.business-science.io/code-tools/2021/03/23/ggplot-code-with-tab
 
 **Ejercicio 1**
 
-```{r echo=FALSE, fig.height=4}
-ggplot(penguins %>% filter(!is.na(sex)), aes(island, fill = species)) +
+```{r echo=FALSE, fig.height=5}
+ggplot(penguins, aes(island, fill = species)) +
   geom_bar(position = "fill", alpha = .3, color = "black") +
-  geom_text(aes(label = ..count..), stat="count", position = position_fill(vjust=.5), fontface = "bold") +
+  geom_text(aes(label = ..count..), 
+            stat="count", 
+            position = position_fill(vjust=.5), 
+            fontface = "bold") +
   scale_y_continuous(labels = scales::percent) +
   xlab("Isla") +
   ylab("") +
-  coord_flip() +
-  theme_light() +
   guides(fill=guide_legend(title="Especie")) +
+  theme_light() +
   theme(panel.grid.minor.x = element_blank(),
-        panel.grid.major.y = element_blank())
+        panel.grid.major.y = element_blank()) +
+  coord_flip()
 ```
 ]
 
@@ -1371,7 +1408,9 @@ ggplot(penguins %>% filter(!is.na(sex)), aes(island, fill = species)) +
 
 **Ejercicio 2**
 
-```{r echo=FALSE, fig.height=4}
+El objetivo es obtener el siguiente gráfico:
+
+```{r echo=FALSE, fig.height=5}
 ggplot(penguins, aes(bill_length_mm)) +
   geom_histogram(data = penguins %>% filter(sex == "female"), aes(y = ..count.., fill = sex), alpha = .6, color = "black") +
   geom_histogram(data = penguins %>% filter(sex == "male"), aes(y = -..count.., fill = sex), alpha = .6, color = "black") +
@@ -1393,5 +1432,1590 @@ ggplot(penguins, aes(bill_length_mm)) +
 ```
 ]
 
+- Comenzar con un diagrama de barras (vertical)
+- Ajustar colores
+- Ajustar etiquetas
+- Cambiar tema
+- Invertir ejes
+
 ---
 
+# Ejercicio 1
+
+```{r echo=FALSE, fig.height=3}
+ggplot(penguins %>% filter(!is.na(sex)), aes(island, fill = species)) +
+  geom_bar(position = "fill", alpha = .3, color = "black") +
+  geom_text(aes(label = ..count..), stat="count", position = position_fill(vjust=.5), fontface = "bold") +
+  scale_y_continuous(labels = scales::percent) +
+  xlab("Isla") +
+  ylab("") +
+  coord_flip() +
+  theme_light() +
+  guides(fill=guide_legend(title="Especie")) +
+  theme(panel.grid.minor.x = element_blank(),
+        panel.grid.major.y = element_blank())
+```
+
+---
+
+# Ejercicio 1
+
+
+```{r ref.label="ejBar1", echo=FALSE, fig.height=3}
+```
+
+--
+
+```{r ejBar1, eval=FALSE}
+ggplot(penguins, aes(island)) +
+  geom_bar() 
+```
+
+
+---
+
+# Ejercicio 1
+
+
+```{r ref.label="ejBar2", echo=FALSE, fig.height=3}
+```
+
+--
+
+```{r ejBar2, eval=FALSE}
+ggplot(penguins, aes(island, fill = species)) + #<<
+  geom_bar() 
+```
+
+---
+
+# Ejercicio 1
+
+
+```{r ref.label="ejBar3", echo=FALSE, fig.height=3}
+```
+
+--
+
+```{r ejBar3, eval=FALSE}
+ggplot(penguins, aes(island, fill = species)) +
+  geom_bar(position = "fill") #<<
+```
+
+---
+
+# Ejercicio 1
+
+
+```{r ref.label="ejBar4", echo=FALSE, fig.height=3}
+```
+
+--
+
+```{r ejBar4, eval=FALSE}
+ggplot(penguins, aes(island, fill = species)) +
+  geom_bar(position = "fill", 
+           alpha = .3, color = "black") #<<
+```
+
+
+---
+
+# Ejercicio 1
+
+
+```{r ref.label="ejBar5", echo=FALSE, fig.height=3}
+```
+
+--
+
+```{r ejBar5, eval=FALSE}
+ggplot(penguins, aes(island, fill = species)) +
+  geom_bar(position = "fill", 
+           alpha = .3, color = "black") +
+  xlab("Isla") + #<<
+  ylab("") #<<
+```
+
+
+---
+
+# Ejercicio 1
+
+
+```{r ref.label="ejBar6", echo=FALSE, fig.height=3}
+```
+
+--
+
+```{r ejBar6, eval=FALSE}
+ggplot(penguins, aes(island, fill = species)) +
+  geom_bar(position = "fill", alpha = .3, color = "black") +
+  xlab("Isla") + 
+  ylab("") + 
+  guides(fill=guide_legend(title="Especie")) #<<
+```
+
+---
+
+# Ejercicio 1
+
+
+```{r ref.label="ejBar7", echo=FALSE, fig.height=3}
+```
+
+--
+
+```{r ejBar7, eval=FALSE}
+ggplot(penguins, aes(island, fill = species)) +
+  geom_bar(position = "fill", alpha = .3, color = "black") +
+  xlab("Isla") +
+  ylab("") +
+  guides(fill=guide_legend(title="Especie")) +
+  theme_light() #<<
+```
+
+
+---
+
+# Ejercicio 1
+
+```{r ref.label="ejBar8", echo=FALSE, fig.height=3}
+```
+
+--
+
+```{r ejBar8, eval=FALSE}
+ggplot(penguins, aes(island, fill = species)) +
+  geom_bar(position = "fill", alpha = .3, color = "black") +
+  scale_y_continuous(labels = scales::percent) + #<<
+  xlab("Isla") +
+  ylab("") +
+  guides(fill=guide_legend(title="Especie")) +
+  theme_light() 
+```
+
+---
+
+# Ejercicio 1
+
+```{r ref.label="ejBar9", echo=FALSE, fig.height=3}
+```
+
+--
+
+```{r ejBar9, eval=FALSE}
+ggplot(penguins, aes(island, fill = species)) +
+  geom_bar(position = "fill", alpha = .3, color = "black") +
+  geom_text(aes(label = ..count..), #<<
+            stat="count", #<<
+            position = position_fill(vjust=.5), #<<
+            fontface = "bold") + #<<
+  scale_y_continuous(labels = scales::percent) +
+  xlab("Isla") +
+  ylab("") +
+  guides(fill=guide_legend(title="Especie")) +
+  theme_light() 
+```
+
+
+---
+
+# Ejercicio 1
+
+```{r ref.label="ejBar10", echo=FALSE, fig.height=3}
+```
+
+--
+
+```{r ejBar10, eval=FALSE}
+ggplot(penguins, aes(island, fill = species)) +
+  geom_bar(position = "fill", alpha = .3, color = "black") +
+  geom_text(aes(label = ..count..), stat="count", 
+            position = position_fill(vjust=.5), 
+            fontface = "bold") +
+  scale_y_continuous(labels = scales::percent) +
+  xlab("Isla") + ylab("") +
+  guides(fill=guide_legend(title="Especie")) +
+  theme_light() +
+  theme(panel.grid.minor.x = element_blank())
+```
+
+---
+
+# Ejercicio 1
+
+```{r ref.label="ejBar11", echo=FALSE, fig.height=3}
+```
+
+--
+
+```{r ejBar11, eval=FALSE}
+ggplot(penguins, aes(island, fill = species)) +
+  geom_bar(position = "fill", alpha = .3, color = "black") +
+  geom_text(aes(label = ..count..), 
+            stat="count", 
+            position = position_fill(vjust=.5), 
+            fontface = "bold") +
+  scale_y_continuous(labels = scales::percent) +
+  xlab("Isla") +
+  ylab("") +
+  guides(fill=guide_legend(title="Especie")) +
+  theme_light() +
+  theme(panel.grid.minor.x = element_blank(),
+        panel.grid.major.y = element_blank())
+```
+
+---
+
+# Ejercicio 1
+
+```{r ref.label="ejBar12", echo=FALSE, fig.height=3}
+```
+
+--
+
+```{r ejBar12, eval=FALSE}
+ggplot(penguins, aes(island, fill = species)) +
+  geom_bar(position = "fill", alpha = .3, color = "black") +
+  geom_text(aes(label = ..count..), 
+            stat="count", 
+            position = position_fill(vjust=.5), 
+            fontface = "bold") +
+  scale_y_continuous(labels = scales::percent) +
+  xlab("Isla") +
+  ylab("") +
+  guides(fill=guide_legend(title="Especie")) +
+  theme_light() +
+  theme(panel.grid.minor.x = element_blank(),
+        panel.grid.major.y = element_blank()) +
+  coord_flip()
+```
+
+
+
+```{r}
+ggplot(penguins, aes(island, fill = species)) +
+  geom_bar(position = "fill", 
+           alpha = 0.3, 
+           color = "black") +
+  geom_text(aes(label = ..count..), 
+            stat = "count",
+            position = position_fill(vjust = 0.5),
+            fontface = "bold") +
+  scale_y_continuous(labels = scales::percent) +
+  xlab("Isla") + 
+  ylab("") +
+  guides(fill = guide_legend(title = "Especie")) +
+  theme_light() +
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.minor.y = element_blank()) +
+  coord_flip()
+```
+
+
+
+---
+
+# Ejercicio 2
+
+Histograma básico de la variable `bill_length_mm`
+
+```{r ref.label="ejHisto1", echo=FALSE, fig.height=3}
+```
+
+--
+
+```{r ejHisto1, eval=FALSE}
+ggplot(penguins, aes(bill_length_mm)) +
+  geom_histogram()
+```
+
+---
+
+# Ejercicio 2
+
+Qué pasa si le doy ¿color?
+
+```{r ref.label="ejHisto2", echo=FALSE, fig.height=3}
+```
+
+--
+
+```{r ejHisto2, eval=FALSE}
+ggplot(penguins, aes(bill_length_mm)) +
+  geom_histogram(color = "orange")
+```
+
+---
+
+# Ejercicio 2
+
+Para colorear el interior tengo que cambiar `fill`
+
+```{r ref.label="ejHisto3", echo=FALSE, fig.height=3}
+```
+
+--
+
+```{r ejHisto3, eval=FALSE}
+ggplot(penguins, aes(bill_length_mm)) +
+  geom_histogram(fill = "orange")
+```
+
+---
+
+# Ejercicio 2
+
+Ambas pueden ponerse a la vez
+
+```{r ref.label="ejHisto4", echo=FALSE, fig.height=3}
+```
+
+--
+
+```{r ejHisto4, eval=FALSE}
+ggplot(penguins, aes(bill_length_mm)) +
+  geom_histogram(fill = "orange", color = "black")
+```
+
+---
+
+# Ejercicio 2
+
+Vamos a darle transparencia utilizando la estética `alpha`
+
+```{r ref.label="ejHisto5", echo=FALSE, fig.height=3}
+```
+
+--
+
+```{r ejHisto5, eval=FALSE}
+ggplot(penguins, aes(bill_length_mm)) +
+  geom_histogram(fill = "orange", color = "black")
+```
+
+---
+
+# Ejercicio 2
+
+Rellenar en función del sexo del pingüino
+
+```{r ref.label="ejHisto6", echo=FALSE, fig.height=3}
+```
+
+--
+
+```{r ejHisto6, eval=FALSE, fig.height=3}
+ggplot(penguins, aes(bill_length_mm, fill = sex)) +
+  geom_histogram(color = "black", alpha = 0.6)
+```
+
+
+---
+
+# Ejercicio 2
+
+Rellenar en función del sexo del pingüino
+
+```{r ref.label="ejHisto7", echo=FALSE, fig.height=3}
+```
+
+--
+
+```{r ejHisto7, eval=FALSE}
+ggplot(penguins, aes(x = bill_length_mm, fill = sex)) +
+  geom_histogram(aes(y = ..count..), color = "black", alpha = 0.6)
+```
+
+---
+
+# Ejercicio 2
+
+Hacer el efecto espejo con todos los datos
+
+```{r ref.label="ejHisto8", echo=FALSE, fig.height=3}
+```
+
+--
+
+```{r ejHisto8, eval=FALSE, fig.height=3}
+ggplot(penguins, aes(x = bill_length_mm, fill = sex)) +
+  geom_histogram(aes(y = ..count..), color = "black", alpha = 0.6) +
+  geom_histogram(aes(y = -..count..), color = "black", alpha = 0.6)
+```
+
+---
+
+# Ejercicio 2
+
+Filtrar cada una de las capas para que utilice un subconjunto de los datos
+
+```{r ref.label="ejHisto9", echo=FALSE, fig.height=3}
+```
+
+--
+
+```{r ejHisto9, eval=FALSE, fig.height=3}
+ggplot(penguins, aes(x = bill_length_mm, fill = sex)) +
+  geom_histogram(data = penguins %>% filter(sex == "female"), 
+                 aes(y = ..count..), color = "black", alpha = 0.6) +
+  geom_histogram(data = penguins %>% filter(sex == "male"),
+                 aes(y = -..count..), color = "black", alpha = 0.6)
+```
+
+---
+
+# Ejercicio 2
+
+Añadir una nueva capa con una etiqueta para indicar macho y hembra
+
+```{r ref.label="ejHisto10", echo=FALSE, fig.height=3}
+```
+
+--
+
+```{r ejHisto10, eval=FALSE}
+ggplot(penguins, aes(x = bill_length_mm, fill = sex)) +
+  geom_histogram(data = penguins %>% filter(sex == "female"), 
+                 aes(y = ..count..), color = "black", alpha = 0.6) +
+  geom_histogram(data = penguins %>% filter(sex == "male"), 
+                 aes(y = -..count..), color = "black", alpha = 0.6) +
+  geom_label(aes(x = 58, y = 10, label = "hembra")) +
+  geom_label(aes(x = 58, y = -10, label = "macho"))
+```
+
+---
+
+# Ejercicio 2
+
+Quitar la leyenda
+
+```{r ref.label="ejHisto11", echo=FALSE, fig.height=3}
+```
+
+--
+
+```{r ejHisto11, eval=FALSE}
+ggplot(penguins, aes(x = bill_length_mm, fill = sex)) +
+  geom_histogram(data = penguins %>% filter(sex == "female"), 
+                 aes(y = ..count..), color = "black", alpha = 0.6) +
+  geom_histogram(data = penguins %>% filter(sex == "male"), 
+                 aes(y = -..count..), color = "black", alpha = 0.6) +
+  geom_label(aes(x = 58, y = 10, label = "hembra")) +
+  geom_label(aes(x = 58, y = -10, label = "macho")) +
+  theme(legend.position = "none")
+```
+
+---
+
+# Ejercicio 2
+
+Cambiar los colores de forma manual
+
+```{r ref.label="ejHisto12", echo=FALSE, fig.height=3}
+```
+
+--
+
+```{r ejHisto12, eval=FALSE}
+ggplot(penguins, aes(x = bill_length_mm)) +
+  geom_histogram(data = penguins %>% filter(sex == "female"), 
+                 aes(y = ..count.., fill = sex), color = "black", alpha = 0.6) +
+  geom_histogram(data = penguins %>% filter(sex == "male"), 
+                 aes(y = -..count.., fill = sex), color = "black", alpha = 0.6) +
+  geom_label(aes(x = 58, y = 10, label = "hembra"), color = "green") +
+  geom_label(aes(x = 58, y = -10, label = "macho"), color = "purple") +
+  scale_fill_manual(values = c("green", "purple")) +
+  theme(legend.position = "none")
+
+```
+
+---
+
+# Ejercicio 2
+
+Cambiar el tema. Pero ojo que así no funciona
+
+```{r ref.label="ejHisto13", echo=FALSE, fig.height=3}
+```
+
+--
+
+```{r ejHisto13, eval=FALSE}
+ggplot(penguins, aes(x = bill_length_mm)) +
+  geom_histogram(data = penguins %>% filter(sex == "female"), 
+                 aes(y = ..count.., fill = sex), color = "black", alpha = 0.6) +
+  geom_histogram(data = penguins %>% filter(sex == "male"), 
+                 aes(y = -..count.., fill = sex), color = "black", alpha = 0.6) +
+  geom_label(aes(x = 58, y = 10, label = "hembra"), color = "green") +
+  geom_label(aes(x = 58, y = -10, label = "macho"), color = "purple") +
+  scale_fill_manual(values = c("green", "purple")) +
+  theme(legend.position = "none") +
+  theme_minimal()
+```
+
+
+---
+
+# Ejercicio 2
+
+Es importante el orden de las capas del tema
+
+```{r ref.label="ejHisto14", echo=FALSE, fig.height=3}
+```
+
+--
+
+```{r ejHisto14, eval=FALSE}
+ggplot(penguins, aes(x = bill_length_mm)) +
+  geom_histogram(data = penguins %>% filter(sex == "female"), 
+                 aes(y = ..count.., fill = sex), color = "black", alpha = 0.6) +
+  geom_histogram(data = penguins %>% filter(sex == "male"), 
+                 aes(y = -..count.., fill = sex), color = "black", alpha = 0.6) +
+  geom_label(aes(x = 58, y = 10, label = "hembra"), color = "green") +
+  geom_label(aes(x = 58, y = -10, label = "macho"), color = "purple") +
+  scale_fill_manual(values = c("green", "purple")) +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+---
+
+# Ejercicio 2
+
+Cambiar la fuente del tema
+
+```{r ref.label="ejHisto15", echo=FALSE, fig.height=3}
+```
+
+--
+
+```{r ejHisto15, eval=FALSE}
+ggplot(penguins, aes(x = bill_length_mm)) +
+  geom_histogram(data = penguins %>% filter(sex == "female"), 
+                 aes(y = ..count.., fill = sex), color = "black", alpha = 0.6) +
+  geom_histogram(data = penguins %>% filter(sex == "male"), 
+                 aes(y = -..count.., fill = sex), color = "black", alpha = 0.6) +
+  geom_label(aes(x = 58, y = 10, label = "hembra"), color = "green") +
+  geom_label(aes(x = 58, y = -10, label = "macho"), color = "purple") +
+  scale_fill_manual(values = c("green", "purple")) +
+  theme_minimal() +
+  theme(legend.position = "none",
+        text = element_text(family = "Times", size = 16)) # aquí en windows TT Times New Roman
+```
+
+---
+
+# Ejercicio 2
+
+Nota, las fuentes dependen del sistema operativo que estés utilizando:
+
+
+---
+
+# Ejercicio 2
+
+Cambiar las etiquetas x e y
+
+```{r ref.label="ejHisto16", echo=FALSE, fig.height=3}
+```
+
+--
+
+```{r ejHisto16, eval=FALSE}
+ggplot(penguins, aes(x = bill_length_mm)) +
+  geom_histogram(data = penguins %>% filter(sex == "female"), 
+                 aes(y = ..count.., fill = sex), color = "black", alpha = 0.6) +
+  geom_histogram(data = penguins %>% filter(sex == "male"), 
+                 aes(y = -..count.., fill = sex), color = "black", alpha = 0.6) +
+  geom_label(aes(x = 58, y = 10, label = "hembra"), color = "green") +
+  geom_label(aes(x = 58, y = -10, label = "macho"), color = "purple") +
+  scale_fill_manual(values = c("green", "purple")) +
+  xlab("Longitud del pico") +
+  ylab("Número de pingüinos") +
+  theme_minimal() +
+  theme(legend.position = "none",
+        text = element_text(family = "Times", size = 16)) # aquí en windows TT Times New Roman
+```
+
+
+---
+
+# Ejercicio 2
+
+Otra alternativa para cambiar las etiquetas x e y
+
+```{r ref.label="ejHisto18", echo=FALSE, fig.height=3}
+```
+
+--
+
+```{r ejHisto18, eval=FALSE}
+
+ggplot(penguins, aes(x = bill_length_mm)) +
+  geom_histogram(data = penguins %>% filter(sex == "female"), 
+                 aes(y = ..count.., fill = sex), color = "black", alpha = 0.6) +
+  geom_histogram(data = penguins %>% filter(sex == "male"), 
+                 aes(y = -..count.., fill = sex), color = "black", alpha = 0.6) +
+  geom_label(aes(x = 58, y = 10, label = "hembra"), color = "green") +
+  geom_label(aes(x = 58, y = -10, label = "macho"), color = "purple") +
+  scale_fill_manual(values = c("green", "purple")) +
+  labs(title = "Histograma de pingüinos",
+       x = "Longitud del pico", 
+       y = "Número de pingüinos") +
+  theme_minimal() +
+  theme(legend.position = "none",
+        text = element_text(family = "Times", size = 16)) # aquí en windows TT Times New Roman
+```
+
+---
+
+# Ejercicio 2
+
+Indicar saltos de línea en las etiquetas
+
+```{r ref.label="ejHisto19", echo=FALSE, fig.height=3}
+```
+
+--
+
+```{r ejHisto19, eval=FALSE}
+ggplot(penguins, aes(x = bill_length_mm)) +
+  geom_histogram(data = penguins %>% filter(sex == "female"), 
+                 aes(y = ..count.., fill = sex), color = "black", alpha = 0.6) +
+  geom_histogram(data = penguins %>% filter(sex == "male"), 
+                 aes(y = -..count.., fill = sex), color = "black", alpha = 0.6) +
+  geom_label(aes(x = 58, y = 10, label = "hembra"), color = "green") +
+  geom_label(aes(x = 58, y = -10, label = "macho"), color = "purple") +
+  scale_fill_manual(values = c("green", "purple")) +
+  labs(title = "Histograma de pingüinos \ndividido por sexo",
+       x = "Longitud del pico", 
+       y = "Número de pingüinos") +
+  theme_minimal() +
+  theme(legend.position = "none",
+        text = element_text(family = "Times", size = 16)) # aquí en windows TT Times New Roman
+```
+
+---
+
+# Ejercicio 2
+
+Transformación del eje y: cambiar etiquetas
+
+```{r ref.label="ejHisto20", echo=FALSE, fig.height=3}
+```
+
+--
+
+```{r ejHisto20, eval=FALSE}
+ggplot(penguins, aes(x = bill_length_mm)) +
+  geom_histogram(data = penguins %>% filter(sex == "female"), 
+                 aes(y = ..count.., fill = sex), color = "black", alpha = 0.6) +
+  geom_histogram(data = penguins %>% filter(sex == "male"), 
+                 aes(y = -..count.., fill = sex), color = "black", alpha = 0.6) +
+  geom_label(aes(x = 58, y = 10, label = "hembra"), color = "green") +
+  geom_label(aes(x = 58, y = -10, label = "macho"), color = "purple") +
+  scale_y_continuous(label = abs) +
+  scale_fill_manual(values = c("green", "purple")) +
+  labs(title = "Histograma de pingüinos \ndividido por sexo",
+       x = "Longitud del pico", 
+       y = "Número de pingüinos") +
+  theme_minimal() +
+  theme(legend.position = "none",
+        text = element_text(family = "Times", size = 16)) # aquí en windows TT Times New Roman
+```
+
+---
+
+# Ejercicio 2
+
+Transformación del eje x: añadir más breaks
+
+```{r ref.label="ejHisto21", echo=FALSE, fig.height=3}
+```
+
+--
+
+```{r ejHisto21, eval=FALSE}
+ggplot(penguins, aes(x = bill_length_mm)) +
+  geom_histogram(data = penguins %>% filter(sex == "female"), 
+                 aes(y = ..count.., fill = sex), color = "black", alpha = 0.6) +
+  geom_histogram(data = penguins %>% filter(sex == "male"), 
+                 aes(y = -..count.., fill = sex), color = "black", alpha = 0.6) +
+  geom_label(aes(x = 58, y = 10, label = "hembra"), color = "green") +
+  geom_label(aes(x = 58, y = -10, label = "macho"), color = "purple") +
+  scale_x_continuous(n.breaks = 6) +
+  scale_y_continuous(label = abs) +
+  scale_fill_manual(values = c("green", "purple")) +
+  labs(title = "Histograma de pingüinos \ndividido por sexo",
+       x = "Longitud del pico", 
+       y = "Número de pingüinos") +
+  theme_minimal() +
+  theme(legend.position = "none",
+        text = element_text(family = "Times", size = 16)) # aquí en windows TT Times New Roman
+
+```
+
+---
+
+# Ejercicio 2
+
+Cambiar el tipo de family de geom_label
+
+```{r ref.label="ejHisto22", echo=FALSE, fig.height=3}
+```
+
+--
+
+```{r ejHisto22, eval=FALSE}
+ggplot(penguins, aes(x = bill_length_mm)) +
+  geom_histogram(data = penguins %>% filter(sex == "female"), 
+                 aes(y = ..count.., fill = sex), color = "black", alpha = 0.6) +
+  geom_histogram(data = penguins %>% filter(sex == "male"), 
+                 aes(y = -..count.., fill = sex), color = "black", alpha = 0.6) +
+  geom_label(aes(x = 58, y = 10, label = "hembra"), color = "green", family = "Times") +
+  geom_label(aes(x = 58, y = -10, label = "macho"), color = "purple", family = "Times") +
+  scale_x_continuous(n.breaks = 6) +
+  scale_y_continuous(label = abs) +
+  scale_fill_manual(values = c("green", "purple")) +
+  labs(title = "Histograma de pingüinos \ndividido por sexo",
+       x = "Longitud del pico", 
+       y = "Número de pingüinos") +
+  theme_minimal() +
+  theme(legend.position = "none",
+        text = element_text(family = "Times", size = 16))
+```
+
+---
+
+# Ejercicio 2
+
+Separar las etiquetas de los ejes de los ticks
+
+```{r ref.label="ejHisto23", echo=FALSE, fig.height=3}
+```
+
+--
+
+```{r ejHisto23, eval=FALSE}
+ggplot(penguins, aes(x = bill_length_mm)) +
+  geom_histogram(data = penguins %>% filter(sex == "female"), 
+                 aes(y = ..count.., fill = sex), color = "black", alpha = 0.6) +
+  geom_histogram(data = penguins %>% filter(sex == "male"), 
+                 aes(y = -..count.., fill = sex), color = "black", alpha = 0.6) +
+  geom_label(aes(x = 58, y = 10, label = "hembra"), color = "green", family = "Times") +
+  geom_label(aes(x = 58, y = -10, label = "macho"), color = "purple", family = "Times") +
+  scale_x_continuous(n.breaks = 6) +
+  scale_y_continuous(label = abs) +
+  scale_fill_manual(values = c("green", "purple")) +
+  labs(title = "Histograma de pingüinos \ndividido por sexo",
+       x = "Longitud del pico", 
+       y = "Número de pingüinos") +
+  theme_minimal() +
+  theme(legend.position = "none",
+        text = element_text(family = "Times", size = 16),
+        axis.title.x = element_text(margin = margin(15,0,0,0)),
+        axis.title.y = element_text(margin = margin(r = 15)))
+```
+
+---
+
+# Ejercicio 2
+
+Introducir líneas verticales para mostrar la media
+
+```{r ref.label="ejHisto24", echo=FALSE, fig.height=3}
+```
+
+--
+
+```{r ejHisto24, eval=FALSE}
+ggplot(penguins, aes(x = bill_length_mm)) +
+  geom_histogram(data = penguins %>% filter(sex == "female"), 
+                 aes(y = ..count.., fill = sex), color = "black", alpha = 0.6) +
+  geom_histogram(data = penguins %>% filter(sex == "male"), 
+                 aes(y = -..count.., fill = sex), color = "black", alpha = 0.6) +
+  geom_label(aes(x = 58, y = 10, label = "hembra"), color = "green", family = "Times") +
+  geom_label(aes(x = 58, y = -10, label = "macho"), color = "purple", family = "Times") +
+  geom_vline(xintercept = penguins %>% pull(bill_length_mm) %>% mean(na.rm = TRUE)) +
+  scale_x_continuous(n.breaks = 6) +
+  scale_y_continuous(label = abs) +
+  scale_fill_manual(values = c("green", "purple")) +
+  labs(title = "Histograma de pingüinos \ndividido por sexo",
+       x = "Longitud del pico", 
+       y = "Número de pingüinos") +
+  theme_minimal() +
+  theme(legend.position = "none",
+        text = element_text(family = "Times", size = 16),
+        axis.title.x = element_text(margin = margin(15,0,0,0)),
+        axis.title.y = element_text(margin = margin(r = 15)))
+```
+
+# Ejercicio 2
+
+Añadir medias filtrando por sexo
+
+```{r ref.label="ejHisto25", echo=FALSE, fig.height=3}
+```
+
+--
+
+```{r ejHisto25, eval=FALSE}
+ggplot(penguins, aes(x = bill_length_mm)) +
+  geom_histogram(data = penguins %>% filter(sex == "female"), 
+                 aes(y = ..count.., fill = sex), color = "black", alpha = 0.6) +
+  geom_histogram(data = penguins %>% filter(sex == "male"), 
+                 aes(y = -..count.., fill = sex), color = "black", alpha = 0.6) +
+  geom_label(aes(x = 58, y = 10, label = "hembra"), color = "green", family = "Times") +
+  geom_label(aes(x = 58, y = -10, label = "macho"), color = "purple", family = "Times") +
+  geom_vline(xintercept = penguins %>% pull(bill_length_mm) %>% mean(na.rm = TRUE), size = 2) +
+  geom_vline(xintercept = penguins %>% filter(sex == "female") %>% pull(bill_length_mm) %>% mean(na.rm = TRUE), color = "green", linetype = "dashed") +
+  geom_vline(xintercept = penguins %>% filter(sex == "male") %>% pull(bill_length_mm) %>% mean(na.rm = TRUE), color = "purple", linetype = "dashed") +
+  scale_x_continuous(n.breaks = 6) +
+  scale_y_continuous(label = abs) +
+  scale_fill_manual(values = c("green", "purple")) +
+  labs(title = "Histograma de pingüinos \ndividido por sexo",
+       x = "Longitud del pico", 
+       y = "Número de pingüinos") +
+  theme_minimal() +
+  theme(legend.position = "none",
+        text = element_text(family = "Times", size = 16),
+        axis.title.x = element_text(margin = margin(15,0,0,0)),
+        axis.title.y = element_text(margin = margin(r = 15)))
+```
+
+
+---
+
+# Ejercicio 2
+
+Modificaciones sobre la letra que tiene geom_label
+
+```{r ref.label="ejHisto26", echo=FALSE, fig.height=3}
+```
+
+--
+
+```{r ejHisto26, eval=FALSE}
+ggplot(penguins, aes(x = bill_length_mm)) +
+  geom_histogram(data = penguins %>% filter(sex == "female"), 
+                 aes(y = ..count.., fill = sex), color = "black", alpha = 0.6) +
+  geom_histogram(data = penguins %>% filter(sex == "male"), 
+                 aes(y = -..count.., fill = sex), color = "black", alpha = 0.6) +
+  geom_label(aes(x = 58, y = 10, label = "hembra"), color = "green", family = "Times", fontface = "bold") +
+  geom_label(aes(x = 58, y = -10, label = "macho"), color = "purple", family = "Times", fontface = "bold") +
+  geom_vline(xintercept = penguins %>% pull(bill_length_mm) %>% mean(na.rm = TRUE), size = 2) +
+  geom_vline(xintercept = penguins %>% filter(sex == "female") %>% pull(bill_length_mm) %>% mean(na.rm = TRUE), color = "green", linetype = "dashed") +
+  geom_vline(xintercept = penguins %>% filter(sex == "male") %>% pull(bill_length_mm) %>% mean(na.rm = TRUE), color = "purple", linetype = "dashed") +
+  scale_x_continuous(n.breaks = 6) +
+  scale_y_continuous(label = abs) +
+  scale_fill_manual(values = c("green", "purple")) +
+  labs(title = "Histograma de pingüinos \ndividido por sexo",
+       x = "Longitud del pico", 
+       y = "Número de pingüinos") +
+  theme_minimal() +
+  theme(legend.position = "none",
+        text = element_text(family = "Times", size = 16),
+        axis.title.x = element_text(margin = margin(15,0,0,0)),
+        axis.title.y = element_text(margin = margin(r = 15)))
+
+```
+
+
+---
+
+# Ejercicio 2
+
+Utilizando un tema que es de otro paquete (hrbrthemes)
+
+```{r ref.label="ejHisto27", echo=FALSE, fig.height=3}
+```
+
+--
+
+```{r ejHisto27, eval=FALSE}
+library(hrbrthemes)
+ggplot(penguins, aes(x = bill_length_mm)) +
+  geom_histogram(data = penguins %>% filter(sex == "female"), 
+                 aes(y = ..count.., fill = sex), color = "black", alpha = 0.6) +
+  geom_histogram(data = penguins %>% filter(sex == "male"), 
+                 aes(y = -..count.., fill = sex), color = "black", alpha = 0.6) +
+  geom_label(aes(x = 58, y = 10, label = "hembra"), color = "green", family = "Times", fontface = "bold") +
+  geom_label(aes(x = 58, y = -10, label = "macho"), color = "purple", family = "Times", fontface = "bold") +
+  geom_vline(xintercept = penguins %>% pull(bill_length_mm) %>% mean(na.rm = TRUE), size = 2) +
+  geom_vline(xintercept = penguins %>% filter(sex == "female") %>% pull(bill_length_mm) %>% mean(na.rm = TRUE), color = "green", linetype = "dashed") +
+  geom_vline(xintercept = penguins %>% filter(sex == "male") %>% pull(bill_length_mm) %>% mean(na.rm = TRUE), color = "purple", linetype = "dashed") +
+  scale_x_continuous(n.breaks = 6) +
+  scale_y_continuous(label = abs) +
+  scale_fill_manual(values = c("green", "purple")) +
+  labs(title = "Histograma de pingüinos \ndividido por sexo",
+       x = "Longitud del pico", 
+       y = "Número de pingüinos") +
+  theme_ipsum() +
+  theme(legend.position = "none",
+        text = element_text(family = "Times", size = 16),
+        axis.title.x = element_text(margin = margin(15,0,0,0)),
+        axis.title.y = element_text(margin = margin(r = 15)))
+```
+
+---
+class: inverse, center, middle
+
+# Lollipop 🍭
+
+---
+
+# Lollipop 🍭
+
+.pull-left[
+Gráfico de barras:
+
+```{r echo=FALSE, fig.height=5}
+ggplot(penguins, aes(island)) + stat_count()
+```
+]
+
+.pull-right[
+
+Objetivo:
+
+```{r ref.label="lollipopFin", echo=FALSE, fig.height=5}
+```
+
+]
+
+.footnote[
+Otras variaciones más complejas del gráfico de barras que se están popularizando: [Circular barl plots]()https://www.r-graph-gallery.com/297-circular-barplot-with-groups.html)]
+
+---
+
+# Lollipop 🍭
+
+```{r fig.height=2}
+penguins_group <- penguins %>% group_by(island) %>% count()
+ggplot(penguins_group, aes(island, n)) +
+  geom_segment(aes(x=island ,xend=island, y=0, yend=n)) +
+  geom_point()
+```
+
+.footnote[
+https://www.r-graph-gallery.com/300-basic-lollipop-plot.html
+https://www.r-graph-gallery.com/304-highlight-a-group-in-lollipop.html
+]
+---
+
+# Lollipop 🍭
+
+```{r ref.label="lollipop1", echo=FALSE, fig.height=3}
+```
+
+```{r lollipop1, eval=FALSE}
+penguins_group <- penguins %>% group_by(island) %>% count()
+ggplot(penguins_group, aes(island, n)) +
+  geom_segment(aes(x=island ,xend=island, y=0, yend=n)) +
+  geom_point(size = 7, shape = 21, color = "black", fill = "pink") +
+  theme_bw()
+```
+
+---
+
+# Lollipop 🍭
+
+```{r fig.height=2}
+penguins_group <- penguins %>% group_by(island) %>% count()
+ggplot(penguins_group, aes(island, n)) +
+  geom_segment(aes(x=island ,xend=island, y=0, yend=n), color = "grey", size = 2) +
+  geom_point(size = 7, shape = 21, color = "black", fill = "pink") +
+  scale_y_continuous(n.breaks = 10) + 
+  coord_flip() +
+  theme_bw() 
+```
+
+---
+
+# Lollipop 🍭
+
+```{r ref.label="lollipopFin", echo=FALSE, fig.height=3}
+```
+
+```{r lollipopFin, eval=FALSE}
+penguins_group <- penguins %>% group_by(island) %>% count()
+ggplot(penguins_group, aes(island, n)) +
+  geom_segment(aes(x=island ,xend=island, y=0, yend=n), color = "grey", size = 2) +
+  geom_point(size = 8, shape = 21, color = "black", fill = "pink") +
+  geom_text(aes(label = n), color = "white") +
+  scale_y_continuous(n.breaks = 10) + 
+  coord_flip() +
+  theme_bw() 
+```
+
+---
+
+# Lollipop 🍭
+
+```{r}
+penguins_resumen <- penguins %>% 
+  group_by(island) %>% 
+  count()
+
+ggplot(penguins_resumen, aes(island, n)) +
+  geom_segment(aes(x=island, xend=island,
+                   y=0, yend=n),
+               color = "grey",
+               size = 2) +
+  geom_point(size = 8, shape = 21, 
+             fill = "#fabada") +
+  scale_y_continuous(n.breaks = 10) +
+  theme_bw() +
+  coord_flip()
+```
+
+---
+class: inverse, center, middle
+
+# Facets
+
+---
+
+# Facets: `facet_wrap`
+
+```{r fig.height=4}
+ggplot(penguins, aes(bill_length_mm, bill_depth_mm)) +
+  geom_point() +
+  facet_wrap(.~species)
+```
+
+---
+
+# Facets: cambiando el layout
+
+```{r fig.height=4}
+ggplot(penguins, aes(bill_length_mm, bill_depth_mm)) +
+  geom_point() +
+  facet_wrap(.~species, nrow = 3)
+```
+
+---
+# Facets: liberando los ejes
+
+```{r fig.height=4}
+ggplot(penguins, aes(bill_length_mm, bill_depth_mm)) +
+  geom_point() + 
+  facet_wrap(~species, scales = "free")
+```
+
+---
+
+# Facets: `facet_grid`
+
+Dividiendo en función a dos variables
+
+```{r fig.height=4}
+ggplot(penguins, aes(bill_length_mm, bill_depth_mm)) +
+  geom_point() + 
+  facet_grid(island~species, scales = "free") #<<
+```
+
+---
+
+# Diferencia entre `facet_wrap` y `facet_grid`
+
+```{r fig.height=3}
+ggplot(penguins, aes(bill_length_mm,
+                     bill_depth_mm)) +
+  geom_point() +
+  facet_wrap(island ~ species, scales = "free")
+```
+
+---
+
+# Diferencia entre `facet_wrap` y `facet_grid`
+
+- Como vemos, también podríamos hacer comparaciones de dos variables con `facet_wrap`
+- Excepto en casos excepcionales, para dos varaibles utilizaremos `facet_grid`
+
+.footnote[[Hilo de StackOverflow sobre la diferencia entre esto](https://stackoverflow.com/questions/20457905/whats-the-difference-between-facet-wrap-and-facet-grid-in-ggplot2)]
+
+---
+class: inverse, center, middle
+
+# Waffle
+
+---
+
+# Waffle
+
+.pull-left[
+- Cuadrícula de celdas cuyos *colores* representan los datos.
+  - También pueden utilizarse formas, iconos... y combinaciones de estos
+- Buena forma de mostrar el progreso hacia un objetivo. 
+- También útil para representar la división de un total por grupos.
+
+```{r}
+library("waffle")
+```
+]
+
+.pull-right[
+```{r fig.height=5}
+# Número de cuadrados 
+# correspondiente a cada clase
+valores <- c(43, 11, 21, 
+             8, 2, 15)
+waffle(valores)
+```
+]
+
+```{r ref.label="waffle1Objetivo", echo=FALSE}
+```
+
+
+---
+
+# Waffle
+
+Para asignas nombres a cada una de las clases se utilizan un vector con nombres
+
+```{r fig.height=5}
+valores <- c(43, 11, 21, 8, 2, 15)
+names(valores) <- c("Clase 1", "Clase 2", "Clase 3",
+                    "Clase 4", "Clase 5", "Clase 6")
+waffle(valores)
+```
+
+---
+
+# Waffle
+
+Ejemplo: *¿Cuántos diamantes hay atendiendo a su tipo de corte?*
+
+Es necesario un vector a partir de los datos:
+
+```{r}
+diamonds %>%
+    group_by(cut) %>%
+    count()
+```
+
+---
+
+# Waffle
+
+Contar el número de cuadros correspondientes
+
+```{r}
+diamonds %>%
+    group_by(cut) %>%
+    count() %>% 
+    mutate(n = round((n / nrow(diamonds))*100),1) %>% 
+    deframe()
+```
+
+---
+
+# Waffle
+
+```{r waffle1Objetivo, eval=FALSE, fig.height=3}
+waffle(
+  diamonds %>%
+    group_by(cut) %>%
+    count() %>% 
+    mutate(n = round((n / nrow(diamonds))*100),1) %>%
+    deframe(), # hasta aquí el dataframe
+    rows = 5, xlab = "Diamantes según su corte")
+```
+
+---
+
+# Waffle
+
+```{r fig.height=3}
+waffle(
+diamonds %>%
+  group_by(cut) %>%
+  count() %>% 
+  mutate(n = round((n / nrow(diamonds))*100),1) %>%
+  deframe(), rows = 10, size = 0.4, flip = TRUE, 
+  title = "Diamantes según su corte",
+  xlab = "Cada cuadro representa aproximadamente 540 diamantes",
+  )
+```
+
+.footnote[[https://github.com/hrbrmstr/waffle](https://github.com/hrbrmstr/waffle)]
+
+---
+class: inverse, center, middle
+
+# Nube de palabras 
+
+---
+
+# Wordcloud
+
+Existen dos paquetes diferentes
+
+Para imágenes estáticas:
+
+```{r}
+library(wordcloud)
+```
+
+Para imágenes dinámicas:
+
+```{r}
+library(wordcloud2)
+```
+
+---
+
+# Wordcloud
+
+En primer lugar es necesario tener los datos en un formato correcto. El objetivo es:
+- Formato tabular con dos columnas:
+  - `palabra` la palabra a mostrar
+  - `freq` la frecuencia con la que aparece esa palabra
+  
+```{r}
+library(tidytext)
+palabras <- harrypotter::chamber_of_secrets[1] %>% 
+  as_tibble() %>% 
+  unnest_tokens(palabra, value) %>% 
+  group_by(palabra) %>% 
+  count()
+```
+
+---
+
+# Wordcloud
+
+```{r include=FALSE}
+set.seed(1234) 
+```
+
+```{r fig.height=4}
+wordcloud(words = palabras$palabra, freq = palabras$n, 
+          min.freq = 1,max.words=200, 
+          random.order=FALSE, rot.per=0.35, 
+          colors=brewer.pal(8, "Dark2"))
+```
+
+---
+
+# Wordcloud
+
+- Cada ejecución elige aleatoriamente
+- Para reproducir siempre la misma nube debemos *fijar una semilla*
+
+```{r}
+set.seed(1234) # Fijar la semilla en un número aleatorio
+wordcloud(words = palabras$palabra, freq = palabras$n, 
+          min.freq = 1,max.words=200, 
+          random.order=FALSE, rot.per=0.35, 
+          colors=brewer.pal(8, "Dark2"))
+```
+
+---
+
+# Wordcloud interactivo
+
+La segunda versión del paquete genera una imagen en formato `.html` con el que se puede interactuar.
+
+```{r fig.height=4}
+wordcloud2(palabras)
+```
+
+---
+
+# Wordcloud interactivo
+
+```{r fig.height=4}
+wordcloud2(palabras, size=0.6, shape = 'star', 
+           backgroundColor = "white", color="#69b3a2")
+```
+
+Al pasar el ratón por encima muestra el número de apariciones de la palabra.
+
+---
+
+# Leer texto propio
+
+Para cargar el texto desde un archivo
+
+```{r eval = FALSE}
+fileName <- "nombre_archivo.txt"
+texto <- readChar(fileName, file.info(fileName)$size)
+```
+
+```{r include=FALSE}
+texto <- "
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin placerat lacus vel magna varius placerat. Nulla eu elit purus. Morbi vitae augue tristique, blandit odio nec, efficitur turpis. Duis at vestibulum justo, id ultricies nunc. Quisque urna metus, imperdiet venenatis rhoncus non, varius vehicula nisi. Mauris interdum aliquam odio, eu mollis nisl scelerisque eu. Quisque rhoncus enim in nunc maximus, sed cursus massa dapibus. Aliquam non velit ut eros tincidunt tincidunt non id lacus. Proin dapibus sapien est, vitae accumsan enim porttitor ac. Duis ultrices neque tempor nibh fermentum maximus. Vestibulum porttitor tortor sit amet consequat pellentesque.
+
+Praesent a sodales quam. Vivamus dolor lectus, iaculis vel nunc in, convallis ultrices quam. Praesent tempus tempor tortor, ac ullamcorper urna pretium eu. Etiam nec sem a nisl hendrerit ultricies. Integer laoreet consectetur diam eget mattis. Nulla facilisis molestie interdum. Vestibulum iaculis condimentum dolor sed pulvinar.
+
+Fusce pulvinar elementum mauris non ullamcorper. Nulla facilisi. Quisque maximus porta turpis eu vulputate. Pellentesque nec est id nisi pellentesque semper. Integer vel imperdiet erat. Pellentesque congue velit eget metus efficitur, a malesuada nisl aliquet. Nulla euismod pellentesque semper. Aliquam sodales accumsan egestas. Vivamus ut lobortis dolor, at facilisis magna. Sed ultrices cursus dapibus.
+
+Vestibulum quis ex ac magna facilisis efficitur. Donec non eros ut ex iaculis pulvinar. Sed convallis lectus orci, non pellentesque nisl bibendum sed. Aliquam ut lobortis neque. Sed tempor odio non augue gravida commodo. Mauris aliquet, sapien ut posuere ultricies, est enim suscipit ligula, ut accumsan odio nunc sed diam. Donec at orci pulvinar, pharetra nisl in, fermentum massa. Curabitur sed bibendum arcu. Pellentesque suscipit, ligula et molestie mattis, elit lacus cursus ipsum, nec cursus mauris magna in lorem. Nam in erat sem. Donec pulvinar, est id facilisis pulvinar, tortor diam pellentesque mauris, sed ultricies nulla eros non massa.
+
+Ut fermentum ex libero, a maximus purus euismod in. Sed non nisi non metus volutpat sollicitudin. Vestibulum massa elit, suscipit in diam et, pharetra luctus enim. Vivamus dolor est, tristique eget eros vel, vulputate congue augue. Cras viverra tellus non nisl rutrum semper. Morbi id pretium purus. Sed nec vehicula ipsum. Suspendisse vel sapien quam. Mauris pharetra viverra tellus ut convallis. Nunc imperdiet sagittis ipsum consectetur tristique.
+"
+```
+
+---
+
+# Nube de palabras
+
+```{r}
+
+# devtools::install_github("https://github.com/bradleyboehmke/harrypotter")
+# library(harrypotter)
+# 
+# hppalabras <- harrypotter::chamber_of_secrets[1] %>%
+#   as_tibble() %>%
+#   unnest_tokens(word, value) %>%
+#   group_by(word) %>%
+#   count()
+```
+
+---
+
+# Nube de palabras
+
+```{r}
+# hppalabras_filtradas <- hppalabras %>%
+#   anti_join(stop_words, by = c("word" = "word"))
+#   
+# hppalabras_filtradas_top <- hppalabras_filtradas %>%
+#   arrange(desc(n)) %>%
+#   ungroup() %>%
+#   slice_head(n = 30)
+#   
+# wordcloud2(hppalabras_filtradas_top)
+```
+
+---
+
+# Nube de palabras
+
+```{r}
+# mi_texto <- readChar("palabras.txt", file.info("palabras.txt")$size)
+# 
+# mi_texto <- mi_texto %>%
+#   as_tibble() %>%
+#   unnest_tokens(word, value) %>%
+#   group_by(word) %>%
+#   count()
+# 
+# wordcloud2(mi_texto)
+```
+
+
+---
+class: middle, inverse, center
+
+# Otros gráficos
+---
+
+
+# Datos: `gapminder` 🌐
+
+```{r eval=FALSE}
+gapminder::gapminder
+```
+
+Exrtacto de los datos de Gapminder sobre expectativa de vida, GDP (Gross Domestic Product - Producto Interior Bruto en U$) per capita, y población por país.
+
+- `country  `: país `<fct>`
+- `continent`: continente `<fct>`
+- `year     `: año `<int>`
+- `lifeExp  `: expectativa de vida `<dbl>`
+- `pop      `: población `<int>`
+- `gdpPercap`: Producto Interior Bruto per capita en U$ `<dbl>`
+
+.foortnote[Gapminder is an independent Swedish foundation with no political, religious or economic affiliations. Gapminder fights devastating misconceptions and promotes a fact-based worldview everyone can understand.]
+---
+
+# Gapminder 🌐
+
+```{r echo=FALSE, tidy=FALSE}
+rmarkdown::paged_table(penguins)
+```
+
+---
+
+# Puntos conectados
+
+El objetivo es obtener este gráfico:
+
+```{r, fig.height=4}
+ggplot(gapminder %>% 
+         filter(country %in% c("Spain", "China", "United States")), 
+       aes(year, gdpPercap)) +
+  geom_line(aes(group = country)) +
+  geom_point(aes(color = country))
+```
+
+
+---
+
+# Animación con `gganimate`
+
+```{r fig.height=3}
+ggplot(gapminder %>% 
+         filter(country %in% c("Spain", "China", "United States")), 
+       aes(year, gdpPercap)) +
+  geom_line(aes(group = country)) +
+  geom_point(aes(color = country)) +
+  transition_reveal(year)
+```
+
+.footnote[Referencia a otros ejemplos: https://www.r-graph-gallery.com/287-smooth-animation-with-tweenr.html]
+
+---
+
+# Título dinámico
+
+```{r fig.height=3}
+ggplot(gapminder %>% 
+         filter(country %in% c("Spain", "China", "United States")), 
+       aes(year, gdpPercap)) +
+  geom_line(aes(group = country)) +
+  geom_point(aes(color = country)) +
+  transition_reveal(year) +
+  labs(title = "Año: {frame_along}")
+  
+```
+
+
+---
+class: inverse, middle, center
+
+# Gráficos animados con `plotly`
+
+---
+
+# `plotly`
+
+```{r fig.height=3}
+p <- ggplot(penguins, aes(sex)) +
+  geom_bar()
+ggplotly(p)
+```
+
+---
+
+# `plotly`
+
+```{r fig.height=3}
+plot2 <- ggplot(penguins, aes(x = bill_length_mm, 
+                     y = bill_depth_mm)) +
+  geom_point(aes(fill = island, 
+                 shape = species,
+                 color = sex),
+             size = 5,
+             alpha = .6) +
+  geom_text(aes(label = ifelse(sex == "male", "M", "F"))) +
+  scale_shape_manual(values = c(21,22,23)) +
+  scale_color_manual(values = c("white", "grey", "black")) +
+  scale_fill_manual(values = c(Biscoe="red", 
+                               Dream="blue", 
+                               Torgersen="green")) +
+  guides(fill = guide_legend(override.aes = list(color = c(Biscoe="red", 
+                                                           Dream="blue", 
+                                                           Torgersen="green"))))
+ggplotly(plot2)
+```
+
+
+---
+
+# `plotly`
+
+```{r fig.height=3}
+plot_base <- ggplot(penguins, aes(x = bill_length_mm, 
+                     y = bill_depth_mm)) +
+  geom_point()
+
+anim <- plot_base +
+  transition_states(species,
+                    transition_length = 5,
+                    state_length = 2)
+
+anim + enter_fade()
+```
+
+
+
+---
+
+# `plotly`
+
+```{r fig.height=3}
+anim <- ggplot(penguins, aes(x = bill_length_mm, 
+                     y = bill_depth_mm)) +
+  geom_point(aes(color = species)) +
+  labs(title = "{closest_state}") +
+  transition_states(species, 
+                    transition_length = 1, 
+                    state_length = 2)
+
+#anim_save("miarchivo.gif")
+```
+
+---
+
+# `plotly`
+
+```{r fig.height=3}
+ggplot(gapminder, aes(gdpPercap, lifeExp, 
+                      size = pop,
+                      color = country)) +
+  geom_point(alpha = 0.7, show.legend = FALSE) +
+  facet_wrap(~continent) +
+  scale_x_log10() +
+  scale_size(range = c(2, 12)) +
+  scale_color_manual(values = country_colors) +
+  labs(title = "Año: {frame_time}",
+       x = "GDP per capita",
+       y = "Life expectancy") +
+  transition_time(year)
+```
+
+---
+class: middle, inverse, center
+
+# Recursos adicionales
+
+---
+
+# Recursos adicionales
+
+- Extensiones de ggplot: https://exts.ggplot2.tidyverse.org/gallery/
+- @elartedeldato
+- https://twitter.com/andrewheiss/status/1390704334795677703?s=21
+
+
+---
+class: middle, center
+
+# Tarea
+
+---
+
+# Tarea
+
+Para superar el curso, es necesaria la entrega de la siguiente tarea:
+
+- Elegir un conjunto de datos de un paquete o externo
+  - En este [enlace](https://github.com/rfordatascience/tidytuesday) encontrarás muchos conjuntos de datos de todo tipo que puedes utilizar.
+- Crear tres gráficos con al menos cinco capas cada uno.
+- Justificar la creación de estos gráficos: 
+  - ¿Qué quieren mostrar? 
+  - ¿Por qué se ha elegido ese tipo de gráfico? 
+  - ¿Por qué se han elegido esas aesthetics para mapear las variables y no otras?
+
+- Entregar:
+  - Archivo `.R` con el código generado y archivo de datos en caso de que el script no los descargue de forma remota.
+  - Explicación de la motivación tras los gráficos generados (en un archivo pdf independiente o como comentarios de código del archivo `.R`).
+
+**DEADLINE**: Miércoles 21 de Julio 2021, 23:59.
